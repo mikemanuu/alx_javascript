@@ -8,16 +8,19 @@ class Rectangle {
         }
     }
 
+    // Method print
     print() {
         for (let i = 0; i < this.height; i++) {
-            console.log('X'.repeat(this.wdth));
+            console.log('X'.repeat(this.width));
         }
     }
 
+    //Method double
     double() {
         this.height = this.height * 2;
         this.width = this.width * 2;
     }
+    //Method rotate
     rotate() {
         [this.width, this.height] = [this.height, this.width];
     }
