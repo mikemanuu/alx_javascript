@@ -1,27 +1,39 @@
 #!/usr/bin/node
 
 const request = require('request');
-const id = process.argv[2];
-const url = `https://swapi-api.hbtn.io/api/films/${id}`;
+const movieId = process.argv[2];
+const apiUrl = `https://swapi-api.alx-tools.com/api/films/${movieId}`;
 
-request(url, function (error, response, body) {
+request.get(apiUrl, (error, response, body) => {
     if (error) {
-        console.log(error);
+        console.error('Error:', error);
     }
-    else if (response.statusCode === 200) {
-        const characters = JSON.parse(body).characters;
+    else if (response.statusCode !== 200) {
+        console.error('Request failed with status code:', response.statusCode);
     }
     else {
-        console.log('error');
+        try {
+            const movieData = JSON.parse(body);
+            console.log(`Characters in "${movieData.title}":`);
+            movieData.characters.forEach((charactersUrl) => {
+                request.get(charactersUrl, (charactersError, charactersResponse, charactersBody) => {
+                    if (charactersError) {
+                        console.error('Error:', charactersError);
+                    }
+                    else if (charactersResponse.statusCode !== 200) {
+                        console.error('Request failed with status code:', charactersResponse.statusCode);
+                    }
+                    else {
+                        const characterData = JSON.parse(charactersBody);
+                        console.log(characterData.name);
+                    }
+                });
+            });
+        }
+        catch (parseError) {
+            console.error('Error parsing JSON response:', parseError);
+        }
     }
 });
 
-function printName(arr) {
-    for (let i = 0; i < arr.length; i++) {
-        request(arr[i], function (error, response, body) {
-            if (!error) {
-                console.log(JSON.parse(body).name);
-            }
-        });
-    }
-}
+ 
