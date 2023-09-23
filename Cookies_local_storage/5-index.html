@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--This is a basic shopping cart:
+-Built with localstorage
+-->
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping cart</title>
+</head>
+
+<body>
+    <script>
+        //availableItems array
+        let availableItems = ["Shampoo", "Soap", "Sponge", "Water"];
+
+        //addItemToCart function
+        function addItemToCart(item) {
+            localStorage.setItem(item, true);
+        }
+
+        //createStore function
+        function createStore() {
+            const $ul = document.createElement("ul");
+            const $body = document.getElementsByTagName("body")[0];
+
+            for (let i of availableItems) {
+                let $li = document.createElement("li");
+                $li.innerHTML = i;
+                $li.addEventListener("click", function () {
+                    addItemToCart(i);
+                });
+                $ul.append($li);
+            }
+            $body.append($ul);
+        }
+
+        //displayCart function
+        function displayCart() {
+            if (localStorage.length) {
+                const $p = document.createElement("p");
+                const $body = document.getElementsByTagName("body")[0];
+                $p.innerHTML = `You previously had ${localStorage.length} items in your cart`;
+                $body.append($p);
+            }
+        }
+
+        if (typeof Storage !== "undefined") {
+            createStore();
+            displayCart();
+        }
+        else {
+            alert("Sorry, your browser does not support Web storage. Try again with a better one");
+        }
+    </script>
+</body>
+
+</html>

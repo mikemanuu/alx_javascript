@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<!--More advanced cart system using Session Storage-->
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cart</title>
+</head>
+
+<body>
+    <script>
+        let availableItems = ["Shampoo", "Soap", "Sponge", "Water"];
+
+        /* getCartFromStorage function:
+        -It parses a string into a JSON object, returning the content of the cart stored in Session storage.
+        -If there is no cart, it returns an empty object.
+        */
+        function getCartFromStorage() {
+            let obj = JSON.parse(sessionStorage.getItem("cart"));
+            if (obj) return obj;
+            return {};
+        }
+
+        /* addItemToCart function:
+        -Stores quantity of the cart
+        -It stores the value of the cart object in a string for the key cart in the Session Storage
+        -It calls displayCart
+        */
+        function addItemToCart(item) {
+            let cart = getCartFromStorage();
+            if (cart && cart[item]) {
+                cart[item]++;
+            }
+            else {
+                cart[item] = 1;
+            }
+            sessionStorage.setItem("cart", JSON.stringify(cart));
+            displayCart();
+        }
+
+        /* removeItemfromCart function:
+        -It remove the entire item from the cart.
+        -Store the value of the cart object in a string for the key cart in the Session Storage
+        -It calls displayCart
+        */
+        function removeItemfromCart(item) {
+            let cart = getCartFromStorage();
+            if (cart && cart[item]) {
+                delete cart[item];
+                sessionStorage.setItem("cart", JSON.stringify(cart));
+            }
+            displayCart();
+        }
+
+        //clearCart function: It clears the entire session storage and calls displayCart
+        function clearCart() {
+            sessionStorage.clear();
+            displayCart();
+        }
+
+        /* createStore function:
+        -It adds a h2 tag with the text 'Available products:'
+        -It adds a list with every item available for purchase
+        -When the user click on an item, it adds it to the cart
+        */
+        function createStore() {
+            const $h2 = document.createElement("h2");
+            $h2.innerHTML = "Available products:";
+            const $ul = document.createElement("ul");
+            const $body = document.getElementsByTagName("body")[0];
+
+            for (let i of availableItems) {
+                let $li = document.createElement("li");
+                $li.innerHTML = i;
+                $li.addEventListener("click", function () {
+                    addItemToCart(i);
+                });
+                $ul.append($li);
+            }
+            $body.append($h2);
+            $body.append($ul);
+        }
+
+        //displayCart function
+        function displayCart() {
+            const $oldDiv = document.getElementById("cartDiv");
+            if ($oldDiv) {
+                const $ul = document.getElementById("cartList");
+            }
+            else {
+                const $h2 = document.createElement("h2");
+                $div.setAttribute("id", "cartDiv");
+                const $body = document.getElementsByTagName("body")[0];
+                $body.append($h2);
+                $h2.innerHTML = "Your cart:";
+                $body.append($div);
+            }
+            updateCart();
+        }
+
+        //updateCart function
+        function updateCart() {
+            const $ul = document.createElement("ul");
+            const $div = document.getElementById("cartDiv");
+            let cart = getCartFromStorage();
+            if (Object.keys(cart).length === 0) {
+                let $li = document.createElement("li");
+                $li.innerHTML = "Your cart is empty";
+                $ul.append($li);
+            }
+            else {
+                let $Clearli = document.createElement("li");
+                $Clearli.innerHTML = "Clear my cart";
+                $Clearli.addEventListener("click", function () {
+                    clearCart();
+                });
+                $ul.append($Clearli);
+                for (let key in cart) {
+                    let $li = document.createElement("li");
+                    $li.innerHTML = `${key} x ${cart[key]}`;
+                    let $span = document.createElement("span");
+                    $span.innerHTML = "(remove)";
+                    $span.addEventListener("click", function () {
+                        removeItemfromCart(key);
+                    });
+                    $li.append($span);
+                    $ul.append($li);
+                }
+            }
+            $div.append($ul);
+        }
+
+        if (typeof Storage !== "undefined") {
+            createStore();
+            displayCart();
+        }
+        else {
+            alert("Sorry, your browser does not support Web storage. Try again with a better one");
+        }
+    </script>
+</body>
+
+</html>
