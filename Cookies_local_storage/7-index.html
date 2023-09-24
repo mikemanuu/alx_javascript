@@ -122,7 +122,7 @@
                     $li.innerHTML = `${key} x ${cart[key]}`;
                     let $span = document.createElement("span");
                     $span.innerHTML = "(remove)";
-                    $span.addEventListener("click", function () {
+                    $span.addEventListener("click", fun ction() {
                         removeItemfromCart(key);
                     });
                     $li.append($span);
