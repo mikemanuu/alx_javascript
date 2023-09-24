@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>DOM Introduction</title>
+</head>
+
+<body>
+    <p id="myParagraph">This is a paragraph.</p>
+    <script>
+        //Demonstrates the basic concept of the DOM by accessing and modifying HTML paragraph.
+        window.onload = function () {
+            var paragraph = document.getElementById("myParagraph");
+            paragraph.textContent = "I successfully updated this paragraph with javascript";
+        };
+    </script>
+</body>
+
+</html>
